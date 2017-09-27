@@ -1,0 +1,3 @@
+[console_scripts]
+langevin = Lans.lans:start
+

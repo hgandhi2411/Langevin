@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-with open('Redme.md') as f:
+with open('Readme.md') as f:
       long_description = ''.join(f.readlines())
 
 setup(name='Langevin',
@@ -9,5 +9,9 @@ setup(name='Langevin',
       author='Heta Gandhi',
       author_email='hgandhi@ur.rochester.edu',
       packages=['Lans'],
-     )
+      entry_points = 
+      {
+            'console_scripts': ['langevin=Lans.lans:start']
+      }
+      )
      
