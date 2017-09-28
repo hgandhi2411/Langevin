@@ -6,3 +6,4 @@ Langevin.egg-info/entry_points.txt
 Langevin.egg-info/top_level.txt
 Lans/__init__.py
 Lans/lans.py
+Lans/visualization.py
