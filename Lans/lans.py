@@ -7,7 +7,7 @@ def read_energy(input_file):
     data = np.transpose(data)
     return data[0], data[1]
 
-async def main(sv):
+async def main(sv): # pragma: no cover
     #create a simple energy
 
     x = np.linspace(-1, 1, 100)
@@ -22,7 +22,7 @@ async def main(sv):
 
 
 
-def start():
+def start():    # pragma: no cover
     sv = SimVis()
     start_server(sv)
     asyncio.ensure_future(main(sv))
