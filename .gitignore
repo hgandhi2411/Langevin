@@ -5,3 +5,4 @@
 .cache/*
 .egg-info/*
 .coverage
+~PowerShellhistory.csv
