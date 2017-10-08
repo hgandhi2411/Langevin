@@ -41,7 +41,6 @@ class SimVis:
             plt.close('all')
             return output.getvalue()
         
-
 class HtmlPageHandler(tornado.web.RequestHandler):
     async def get(self, file_name='index.html'):
         # Check if page exists

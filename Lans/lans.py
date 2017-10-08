@@ -18,8 +18,8 @@ def CreateParser():
     parser.add_argument('-dc', '--damping_coeff', nargs = '?', type = float, default = 1, help = 'Damping coefficient for the system')
     parser.add_argument('-dt', '--time_step', nargs = '?', type = float, default = 1, help = 'Time step for simulation')
     parser.add_argument('-t', '--total_time', nargs = '?', type = float, default = 1, help = 'Total time for which simulation should run')
-    parser.add_argument('--input_file', nargs = '?', type = str, default = './Pot_example.txt', help = 'Specify the path of input file')
-    parser.add_argument('--out_file', nargs = '?', type = str, default = './output.txt', help = 'Specify file path where you want output')
+    parser.add_argument('--input_file', nargs = '?', type = str, default = './Lans/Pot_example.txt', help = 'Specify the path of input file')
+    parser.add_argument('--out_file', nargs = '?', type = str, default = './Lans/output.txt', help = 'Specify file path where you want output')
     return parser
 
 def GetInputs(): 
@@ -32,24 +32,29 @@ def GetInputs():
 
 kb = 1
 x0, v0, temp, Lambda, dt, time, input_file, out_file = GetInputs()
+N = int(time/dt)
+pos, force, energy = ReadEnergy(input_file)
 
 def Random(T, l):
-    '''Calculate the random component of force i.e. solvent force'''
+    '''Calculate and return the random component of force i.e. solvent force'''
     solvent_force = np.random.normal(loc = 0, scale = (2*T*l*kb)**0.5, size = 1)
     return solvent_force
 
-def PotentialForce(x, input_file):
-    '''Calculates and return the potential force'''
-    pos, force, energy = ReadEnergy(input_file)
+def PotentialForce(x, pos, energy):
+    '''Calculate and return the potential force'''
     potential_force = np.interp(x, pos, energy)
     return potential_force
+
+def DragForce(l, v):
+    '''Calculate and return the drag component of force'''
+    return -l*v
+
 
 
 
 async def main(sv): # pragma: no cover
-    #create a simple energy
-    x, f, y = ReadEnergy('./Lans/Pot_example.txt')
-
+    
+    x, y = pos, energy
     sv.set_energy(x, y)
 
     while True:
