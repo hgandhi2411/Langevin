@@ -14,9 +14,8 @@ Installation
 ---------
 To install this simulator, run the following commands from the terminal:
 
-`git clone https://github.com/hgandhi2411/Langevin.git
-
-pip install Langevin`
+`git clone https://github.com/hgandhi2411/Langevin.git` 
+`pip install Langevin`
 
 Usage
 -----
@@ -26,5 +25,8 @@ Output is in the form of a file which contains position and velocity for each ti
 
 The file can be run using the command `langevin` along with different flags as described above. The visualization of the simulation can be seen on a browser at `localhost:8888`. 
 
+TODO
+-----
+Find out why coverage is low even though tests are in place and fix it.
 
 (c) 2017
