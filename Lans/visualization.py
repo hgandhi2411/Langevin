@@ -33,7 +33,6 @@ class SimVis:
         plt.plot(self.pos, pos_e, 'ro', label='current position')
         plt.legend()
         plt.xlabel('Position')
-        plt.ylabel('Energy')
         plt.tight_layout()
         with io.BytesIO() as output:
             fig.savefig(output, format='jpg')

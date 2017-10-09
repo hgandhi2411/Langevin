@@ -1,4 +1,5 @@
 import io
+import os
 import Lans
 import numpy as np
 import argparse
@@ -23,10 +24,11 @@ class Test_Langevin(unittest.TestCase):
         ''' Tests if the parser reads correctly and if no inputs are given, uses default values'''
         self.parser = Lans.CreateParser()
         parsed = self.parser.parse_args(['--initial_velocity', '2.5', '--total_time', '20', '--damping_coeff', '0.1', '--input_file', 'C:/Users/hetag/Desktop/input.txt'])
-        self.assertEqual([parsed.initial_position, parsed.initial_velocity, parsed.time_step, parsed.total_time, parsed.temperature, parsed.damping_coeff, parsed.input_file], [1, 2.5, 1, 20, 1, 0.1, 'C:/Users/hetag/Desktop/input.txt'])
+        self.assertEqual([parsed.initial_position, parsed.initial_velocity, parsed.time_step, parsed.total_time, parsed.temperature, parsed.damping_coeff, parsed.input_file], [1, 2.5, 0.1, 20, 1, 0.1, 'C:/Users/hetag/Desktop/input.txt'])
 
-        self.results = Lans.GetInputs()
-        self.assertEqual(self.results, (1,0.1,1,1,1,1, './Lans/Pot_example.txt', './Lans/output.txt')) 
+        self.results = list(Lans.GetInputs())
+        self.assertEqual(self.results, [1,0.1,1,1,0.1,1, './Lans/Pot_example.txt', './Lans/output.txt']) 
+        self.assertTrue(os.path.exists(self.results[6]))
 
     def test_random(self):
         '''Tests if random generator works fine'''
@@ -40,3 +42,8 @@ class Test_Langevin(unittest.TestCase):
 
     def test_drag_force(self):
         self.assertEqual(Lans.DragForce(0.5, 2), -1)
+
+    def test_euler(self):
+        self.pos = 1
+        self.vel = 1
+        self.assertEqual(Lans.Euler(self.pos, self.vel), [])
