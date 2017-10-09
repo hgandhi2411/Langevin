@@ -8,19 +8,14 @@ CHE 477 Langevin Dynamics Project
 Overview
 -------
 
-This is a python implementation of the Langevin Dynamics Simulation. The Langevin equations which describe brownian motion are:
-
-$ ma = - \lambda v + <\eta> - \frac{\del U}{\del x} $
-
-$ <\eta(t) \eta(t')> = 2 T k_b \lambda \delta(t-t') $
-
-This simulator uses Euler's integration to simulate the position and velocity of a particle. 
+This is a python implementation of the Langevin Dynamics Simulation. This simulator uses Euler's integration to simulate the position and velocity of a particle. 
 
 Installation
 ---------
 To install this simulator, run the following commands from the terminal:
 
 `git clone https://github.com/hgandhi2411/Langevin.git
+
 pip install Langevin`
 
 Usage
