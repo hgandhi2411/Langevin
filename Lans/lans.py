@@ -23,7 +23,7 @@ def CreateParser():
     parser.add_argument('--out_file', nargs = '?', type = str, default = './Lans/output.txt', help = 'Specify file path where you want output, default = \'./Lans/output.txt\' ')
     return parser
 
-def GetInputs(): 
+def GetInputs():
     parser = CreateParser()
     args = parser.parse_args()
     if(args.damping_coeff<=0 or args.temperature<=0 or args.time_step<=0 or args.total_time<=0):
@@ -50,13 +50,25 @@ def DragForce(l, v):
     '''Calculate and return the drag component of force'''
     return -l*v
 
-def Euler(position, velocity):
-    acc = DragForce(Lambda, velocity) + Random(temp, Lambda) + PotentialForce(position, pos, energy)
+def Euler(position, velocity, Lambda = Lambda, temp = temp, pos = pos, energy = energy, dt = dt):
+    acc = DragForce(Lambda, velocity) + Random(temp, Lambda) - PotentialForce(position, pos, energy)
     velocity += acc*dt
     position += velocity*dt
     return acc, velocity, position
 
-async def main(sv): 
+def write_output(out_file, output):
+    f = open(out_file, 'w')
+    f.write('index time position velocity\n')
+    for line in output:
+        for i in range(len(line)):
+            if(i ==0):
+                f.write('{} '.format(line[i]))
+            else:
+                f.write('{:.4f} '.format(line[i]))
+        f.write('\n')
+    f.close()
+
+async def main(sv): #pragma: no cover
     '''Run simulation and send real-time position to visualization'''
     kb = 1
     x0, v0, temp, Lambda, dt, total_time, input_file, out_file = GetInputs()
@@ -66,22 +78,20 @@ async def main(sv):
     velocity = v0
     time = 0
     count = 0
-    x, y = pos, energy
-    sv.set_energy(x, y)
+    sv.set_energy(pos, energy)
+    output = []
 
-    f = open(out_file, 'w')
-    f.write('index time position velocity\n')
     for i in range(N):
         sv.set_position(position)
         new_acc, new_vel, new_pos = Euler(position, velocity)
         time += dt
         count += 1
-        f.write('{} {:.4f} {:.4f} {:.4f}\n'.format(count, time, new_pos, new_vel))
+        output.append([count, time, new_pos, new_vel])
         position = new_pos
         velocity = new_vel
         await asyncio.sleep(0.05)
+    write_output(out_file, output)
     print('Final position = {:.4f}, Final velocity = {:.4f}'.format(position, velocity))
-    f.close()
     return None
     
 

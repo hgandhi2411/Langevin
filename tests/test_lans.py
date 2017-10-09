@@ -19,7 +19,7 @@ class Test_Langevin(unittest.TestCase):
         assert(np.isclose(pos, [0.0001,0.010099,0.020099,0.030098])).all()
         assert(np.isclose(force, [0.010675, 0.010675, 0.010675, 0.012945])).all() 
         assert(np.isclose(energy, [-0.113475, -0.113475, -0.113475, -0.060178])).all() 
-
+    
     def test_inputs(self):
         ''' Tests if the parser reads correctly and if no inputs are given, uses default values'''
         self.parser = Lans.CreateParser()
@@ -28,8 +28,8 @@ class Test_Langevin(unittest.TestCase):
 
         self.results = list(Lans.GetInputs())
         self.assertEqual(self.results, [1,0.1,1,1,0.1,1, './Lans/Pot_example.txt', './Lans/output.txt']) 
-        self.assertTrue(os.path.exists(self.results[6]))
-
+        self.assertTrue(os.path.exists(self.results[6])), 'input file doesn\'t exist'
+    
     def test_random(self):
         '''Tests if random generator works fine'''
         self.assertEqual(Lans.Random(1,0), 0)
@@ -44,6 +44,21 @@ class Test_Langevin(unittest.TestCase):
         self.assertEqual(Lans.DragForce(0.5, 2), -1)
 
     def test_euler(self):
+        '''Tests if the force, position and velocity calculated are correct'''
         self.pos = 1
         self.vel = 1
-        self.assertEqual(Lans.Euler(self.pos, self.vel), [])
+        data = [[1, 2, 3, 4], [10, 20, 30, 40]]
+        self.assertEqual(Lans.Euler(self.pos, self.vel, 0, 1, *data, dt = 0.5), (-10, -4, -1))
+
+    def test_write_output(self):
+        '''Tests if the output file is written correctly'''
+        test_string = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
+        test_string2 = '1 2.0000 3.0000 4.0000 \n'
+        test_string3 = '5 6.0000 7.0000 8.0000 \n' 
+        out_file = './tests/test_output.txt'
+        Lans.write_output(out_file, test_string)
+        f = open(out_file, 'r')
+        test_data = list(f.readlines())
+        f.close()
+        self.assertEqual(test_data[1], test_string2)
+        self.assertEqual(test_data[2], test_string3)
