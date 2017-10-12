@@ -18,11 +18,11 @@ def CreateParser():
     parser.add_argument('-temp','--temperature', nargs = '?', type = float, default = 1, help = 'Temperature at which simulation runs, default = 1')
     parser.add_argument('-dc', '--damping_coeff', nargs = '?', type = float, default = 1, help = 'Damping coefficient for the system, default = 1')
     parser.add_argument('-dt', '--time_step', nargs = '?', type = float, default = 0.1, help = 'Time step for simulation, default = 0.1')
-    parser.add_argument('-t', '--total_time', nargs = '?', type = float, default = 1, help = 'Total time for which simulation should run, default = 1')
+    parser.add_argument('-t', '--total_time', nargs = '?', type = float, default = 10, help = 'Total time for which simulation should run, default = 1')
     parser.add_argument('--input_file', nargs = '?', type = str, default = './Lans/Pot_example.txt', help = 'Specify the path of input file, default = \'./Lans/Pot_example.txt\'')
     parser.add_argument('--out_file', nargs = '?', type = str, default = './Lans/output.txt', help = 'Specify file path where you want output, default = \'./Lans/output.txt\' ')
     return parser
-
+'''
 def GetInputs():
     parser = CreateParser()
     args = parser.parse_args()
@@ -30,7 +30,7 @@ def GetInputs():
         raise ValueError("Damping coefficient, temperature, time_step and total_time must be non-zero positive values")
     else:
         return args.initial_position, args.initial_velocity, args.temperature, args.damping_coeff, args.time_step, args.total_time, args.input_file, args.out_file
-
+'''
 kb = 1
 
 def Random(T, l):
@@ -69,7 +69,14 @@ def write_output(out_file, output):
 async def main(sv): #pragma: no cover
     '''Run simulation and send real-time position to visualization'''
     kb = 1
-    x0, v0, temp, Lambda, dt, total_time, input_file, out_file = GetInputs()
+    parser = CreateParser()
+    args = parser.parse_args()
+    if(args.damping_coeff<=0 or args.temperature<=0 or args.time_step<=0 or args.total_time<=0):
+        #damping coefficient, temperature and time must be positive
+        raise ValueError("Damping coefficient, temperature, time_step and total_time must be non-zero positive values")
+    
+    # assigning values from namespace to variables 
+    x0, v0, temp, Lambda, dt, total_time, input_file, out_file = args.initial_position, args.initial_velocity, args.temperature, args.damping_coeff, args.time_step, args.total_time, args.input_file, args.out_file
     N = int(total_time/dt)
     pos, force, energy = ReadEnergy(input_file)
     position = x0
@@ -81,7 +88,7 @@ async def main(sv): #pragma: no cover
 
     for i in range(N):
         sv.set_position(position)
-        new_acc, new_vel, new_pos = Euler(position, velocity)
+        new_acc, new_vel, new_pos = Euler(position, velocity, Lambda, temp, pos, energy, dt)
         time += dt
         count += 1
         output.append([count, time, new_pos, new_vel])
