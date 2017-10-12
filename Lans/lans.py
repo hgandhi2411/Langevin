@@ -32,9 +32,6 @@ def GetInputs():
         return args.initial_position, args.initial_velocity, args.temperature, args.damping_coeff, args.time_step, args.total_time, args.input_file, args.out_file
 
 kb = 1
-x0, v0, temp, Lambda, dt, time, input_file, out_file = GetInputs()
-N = int(time/dt)
-pos, force, energy = ReadEnergy(input_file)
 
 def Random(T, l):
     '''Calculate and return the random component of force i.e. solvent force'''
@@ -50,7 +47,7 @@ def DragForce(l, v):
     '''Calculate and return the drag component of force'''
     return -l*v
 
-def Euler(position, velocity, Lambda = Lambda, temp = temp, pos = pos, energy = energy, dt = dt):
+def Euler(position, velocity, Lambda, temp, pos, energy, dt):
     acc = DragForce(Lambda, velocity) + Random(temp, Lambda) - PotentialForce(position, pos, energy)
     velocity += acc*dt
     position += velocity*dt
@@ -67,6 +64,7 @@ def write_output(out_file, output):
                 f.write('{:.4f} '.format(line[i]))
         f.write('\n')
     f.close()
+
 
 async def main(sv): #pragma: no cover
     '''Run simulation and send real-time position to visualization'''

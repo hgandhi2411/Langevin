@@ -21,15 +21,17 @@ class Test_Langevin(unittest.TestCase):
         assert(np.isclose(energy, [-0.113475, -0.113475, -0.113475, -0.060178])).all() 
     
     def test_inputs(self):
-        ''' Tests if the parser reads correctly and if no inputs are given, uses default values'''
+        # Tests if the parser reads correctly and if no inputs are given, uses default values
         self.parser = Lans.CreateParser()
         parsed = self.parser.parse_args(['--initial_velocity', '2.5', '--total_time', '20', '--damping_coeff', '0.1', '--input_file', 'C:/Users/hetag/Desktop/input.txt'])
         self.assertEqual([parsed.initial_position, parsed.initial_velocity, parsed.time_step, parsed.total_time, parsed.temperature, parsed.damping_coeff, parsed.input_file], [1, 2.5, 0.1, 20, 1, 0.1, 'C:/Users/hetag/Desktop/input.txt'])
-
+        '''
         self.results = list(Lans.GetInputs())
         self.assertEqual(self.results, [1,0.1,1,1,0.1,1, './Lans/Pot_example.txt', './Lans/output.txt']) 
         self.assertTrue(os.path.exists(self.results[6])), 'input file doesn\'t exist'
-    
+        '''
+    kb = 1
+
     def test_random(self):
         '''Tests if random generator works fine'''
         self.assertEqual(Lans.Random(1,0), 0)
