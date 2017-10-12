@@ -15,6 +15,7 @@ Installation
 To install this simulator, run the following commands from the terminal:
 
 `git clone https://github.com/hgandhi2411/Langevin.git` 
+
 `pip install Langevin`
 
 Usage
