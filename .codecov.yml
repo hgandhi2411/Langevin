@@ -1,4 +1,6 @@
 # Codecov configuration to make it a bit less noisy
+codecov:
+  token: 91c2b8f1-b165-4c3b-b4d8-d83b1cdf6031
 coverage:
   status:
     patch: false
